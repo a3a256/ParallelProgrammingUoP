@@ -1,4 +1,4 @@
-// PARALLEL VERSION OF LAPLACE EQUATION DIVIDING THREADS INTO P BLOCKS(ONLY I GRID IS DIVIDED)
+
 import java.awt.*;
 import javax.swing.*;
 import java.util.concurrent.CyclicBarrier;
@@ -9,10 +9,10 @@ import java.util.concurrent.BrokenBarrierException;
 public class ParallelLaplace extends Thread {
 
     final static int N = 256;
-    final static int P = 4;
+    final static int P = 4; // experiment with the amount of cores
     final static int CELL_SIZE = 2;
     final static int NITER = 100000;
-    final static int OUTPUT_FREQ = 1000;
+    final static int OUTPUT_FREQ = 10000;
 
     static float[][] phi = new float[N][N];
     static float[][] newPhi = new float[N][N];
@@ -20,7 +20,6 @@ public class ParallelLaplace extends Thread {
     public static CyclicBarrier newBarrier = new CyclicBarrier(P);
 
     static Display display = new Display();
-
     public static void main(String args[]) throws Exception {
 
         // Make voltage non-zero on left and right edges
@@ -30,7 +29,6 @@ public class ParallelLaplace extends Thread {
         }
 
         display.repaint();
-
         ParallelLaplace[] threads = new ParallelLaplace[P];
 
         long startTime = System.currentTimeMillis();
