@@ -9,10 +9,10 @@ import java.util.concurrent.BrokenBarrierException;
 public class ParallelLaplace extends Thread {
 
     final static int N = 256;
-    final static int P = 4; // experiment with the amount of cores
+    final static int P = 4; // experiment with the amount of cores 2, 4, 8
     final static int CELL_SIZE = 2;
     final static int NITER = 100000;
-    final static int OUTPUT_FREQ = 10000;
+    final static int OUTPUT_FREQ = 1000; // experiment with 100, 1000, 10000
 
     static float[][] phi = new float[N][N];
     static float[][] newPhi = new float[N][N];
