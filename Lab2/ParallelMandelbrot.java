@@ -80,8 +80,8 @@ System.out.println("Calculation for core " + i + " completed in " + cores[i] + "
             end = N;
         }
 long startTime_block = System.currentTimeMillis();
-        for (int i = 0; i < N; i++) {
-            for (int j = start; j < end; j++) {
+        for (int i = start; i < end; i++) {
+            for (int j = 0; j < N; j++) {
 
                 double cr = (4.0 * i - 2 * N) / N;
                 double ci = (4.0 * j - 2 * N) / N;
@@ -110,3 +110,4 @@ cores[me] = endTime_block - startTime_block;
     }
 
 }
+
