@@ -1,6 +1,6 @@
 public class ParallelMatmulB extends Thread{
 
-    public static final int N = 1024 ;
+    public static final int N = 2048 ;
 
     static float[] a = new float[N*N];
     static float[] b = new float[N*N];
@@ -51,7 +51,7 @@ public class ParallelMatmulB extends Thread{
     public void run(){
         int step = N/P;
         int start_row = row*step;
-        int end_row = row+step;
+        int end_row = start_row+step;
         int i, j;
         for(i = 0 ; i < N; i++) {
             for(j = start_row ; j < end_row ; j++) {
