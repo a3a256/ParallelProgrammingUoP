@@ -6,7 +6,7 @@ public class ParallelMatmulA extends Thread{
     static float[] b = new float[N*N];
     static float[] c = new float[N*N];
 
-    final static int P = 2;
+    final static int P = 8;
 
     public static void main(String [] args) throws Exception{
 
@@ -51,7 +51,7 @@ public class ParallelMatmulA extends Thread{
     public void run(){
         int step = N/P;
         int start_row = row*step;
-        int end_row = row+step;
+        int end_row = start_row+step;
         int i, j;
         for(i = start_row ; i < end_row; i++) {
             for(j = 0 ; j < N ; j++) {
