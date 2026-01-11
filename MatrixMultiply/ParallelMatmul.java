@@ -56,7 +56,7 @@ public class ParallelMatmul extends Thread{
     public void run(){
         int step = N/P;
         int start_row = row*step;
-        int end_row = row+step;
+        int end_row = start_row+step;
         int start_col = col*step;
         int end_col = start_col+step;
         int i, j;
