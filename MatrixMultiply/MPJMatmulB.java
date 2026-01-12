@@ -63,18 +63,17 @@ public class MPJMatmulB {
             for(i=0; i<N; i++){
                 for(j=0; j<block_size; j++){
                     rec_c[N*i + j] = c[block_size*i + j];
-                    // System.out.println("Val id in rec: " + (N*i + j) + "\nReceived: " + rec_c[N*i + j] + " original: " + c[block_size*i + j]);
+                    
                 }
             }
             for(int src = 1; src<P; src++){
-                // System.out.println(src);
+                
                 MPI.COMM_WORLD.Recv(c, 0, N*block_size, MPI.FLOAT, src, 0) ;
                 for(i=0; i<N; i++){
                     for(j=0; j<block_size; j++){
                         int globalCol = src * block_size + j;
-                        // System.out.println("Val id in rec: " + ((N*i + block_size*(src/q)) + (j+N*(src%q))));
+                        
                         rec_c[i * N + globalCol] = c[block_size*i + j];
-                        // System.out.println("Received: " + rec_c[(N*i + block_size*(src/q)) + (j+N*(src%q))] + " original: " + c[block_size*i + j]);
                     }
                 }
             }
