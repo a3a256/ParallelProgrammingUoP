@@ -1,52 +1,34 @@
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-
-import javax.imageio.ImageIO;
-
 import java.io.File;
+import javax.imageio.ImageIO;
 
 public class CyclicMandelbrot extends Thread {
 
     final static int N = 4096;
     final static int CUTOFF = 100;
+    final static int P = 4;
 
     static int[][] set = new int[N][N];
-    static long[] times = new long[4];
 
     public static void main(String[] args) throws Exception {
 
         // Calculate set
         long startTime = System.currentTimeMillis();
 
-        CyclicMandelbrot thread0 = new CyclicMandelbrot(0, 0, 4);
-        CyclicMandelbrot thread1 = new CyclicMandelbrot(1, 0, 4);
-        CyclicMandelbrot thread2 = new CyclicMandelbrot(2, 0, 4);
-        CyclicMandelbrot thread3 = new CyclicMandelbrot(3, 0, 4);
+        CyclicMandelbrot[] threads = new CyclicMandelbrot[P];
 
-        thread0.start();
-        thread1.start();
-        thread2.start();
-        thread3.start();
+        for (int i = 0; i < P; i++) {
+            threads[i] = new CyclicMandelbrot(i);
+            threads[i].start();
+        }
 
-        thread0.join();
-        thread1.join();
-        thread2.join();
-        thread3.join();
+        for (int i = 0; i < P; i++) {
+            threads[i].join();
+        }
 
         long endTime = System.currentTimeMillis();
-
-        System.out.println("Calculation for block " + 1 + " completed in "
-                + times[0] + " milliseconds\n");
-
-        System.out.println("Calculation for block " + 2 + " completed in "
-                + times[1] + " milliseconds\n");
-
-        System.out.println("Calculation for block " + 3 + " completed in "
-                + times[2] + " milliseconds\n");
-
-        System.out.println("Calculation for block " + 4 + " completed in "
-                + times[3] + " milliseconds\n");
 
         System.out.println("Calculation completed in "
                 + (endTime - startTime) + " milliseconds");
@@ -73,33 +55,25 @@ public class CyclicMandelbrot extends Thread {
         }
 
         // Print file
-        ImageIO.write(img, "PNG", new File("O:\\Desktop\\CyclicMandelbrot.png"));
+        ImageIO.write(img, "PNG", new File("CyclicMandelbrotd.png"));
     }
 
-    int me, x, step;
+    int me;
 
-    public CyclicMandelbrot(int iter, int x, int steps) {
-        this.me = iter;
-        this.x = x;
-        this.step = steps;
+    public CyclicMandelbrot(int me) {
+        this.me = me;
     }
 
     public void run() {
-        int x_start, x_coef, y_start, y_coef;
-        if (x == 1) {
-            x_start = me;
-            x_coef = step;
-            y_start = 0;
-            y_coef = 1;
-        } else {
-            y_start = me;
-            y_coef = step;
-            x_start = 0;
-            x_coef = 1;
-        }
-        long startTime_block = System.currentTimeMillis();
-        for (int i = x_start; i < N; i += x_coef) {
-            for (int j = y_start; j < N; j += y_coef) {
+
+        int begin, end, block_size;
+
+        block_size = N / P;
+        begin = me * block_size;
+        end = begin + block_size;
+
+        for (int i = me; i < N; i+=P) {
+            for (int j = 0; j < N; j++) {
 
                 double cr = (4.0 * i - 2 * N) / N;
                 double ci = (4.0 * j - 2 * N) / N;
@@ -122,8 +96,6 @@ public class CyclicMandelbrot extends Thread {
                 set[i][j] = k;
             }
         }
-        long endTime_block = System.currentTimeMillis();
-        times[me] = endTime_block - startTime_block;
     }
 
 }
