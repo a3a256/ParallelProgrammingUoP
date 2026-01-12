@@ -49,10 +49,6 @@ public class MPJMatmul {
                     rec_c[N*i + j] = (float)(N*i + j);
                 }
             }
-            // for(i=1; i<P; i++){
-            //     MPI.COMM_WORLD.Send(a, 0, N*N, MPI.FLOAT, i, 0);
-            //     MPI.COMM_WORLD.Send(b, 0, N*N, MPI.FLOAT, i, 0);
-            // }
         }
 
         MPI.COMM_WORLD.Bcast(a, 0, N * N, MPI.FLOAT, 0);
@@ -70,7 +66,7 @@ public class MPJMatmul {
                 int globalCol = blockCol * block_size + j;
                 sum = 0.0f;
                 for(k=0; k<N; k++){
-                    // sum += a[(block_size*i + ((me/q) * block_size)) + k]*b[N*k + (j+block_size*me%q)];
+                    
                     sum += a[globalRow*N + k]*b[k * N + globalCol];
                 }
                 c[block_size * i + j] += sum;
@@ -84,19 +80,19 @@ public class MPJMatmul {
             for(i=0; i<block_size; i++){
                 for(j=0; j<block_size; j++){
                     rec_c[N*i + j] = c[block_size*i + j];
-                    // System.out.println("Val id in rec: " + (N*i + j) + "\nReceived: " + rec_c[N*i + j] + " original: " + c[block_size*i + j]);
+                    
                 }
             }
             for(int src = 1; src<P; src++){
-                // System.out.println(src);
+               
                 MPI.COMM_WORLD.Recv(c, 0, block_size*block_size, MPI.FLOAT, src, 0) ;
                 for(i=0; i<block_size; i++){
                     int globalRow = (src/q) * block_size + i;
                     for(j=0; j<block_size; j++){
                         int globalCol = (src%q) * block_size + j;
-                        // System.out.println("Val id in rec: " + ((N*i + block_size*(src/q)) + (j+N*(src%q))));
+                        
                         rec_c[globalRow * N + globalCol] = c[block_size*i + j];
-                        // System.out.println("Received: " + rec_c[(N*i + block_size*(src/q)) + (j+N*(src%q))] + " original: " + c[block_size*i + j]);
+                        
                     }
                 }
             }
